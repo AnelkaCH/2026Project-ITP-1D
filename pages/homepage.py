@@ -22,15 +22,17 @@ def show_home():
             st.session_state.current_page = "browse_tickets"
             st.rerun()
 
-    st.subheader("Already bought tickets?")
-    st.write("View your orders!")
+    st.subheader("Already bought tickets? View your orders!")
+    
     users=load_accounts()
     for user in users:
         if user["email"] == st.session_state.current_account:
-
+            if not user["tickets"]:
+                st.write("You have no ticket orders yet.")
             for i, ticket in enumerate(user["tickets"]):
                 st.write(f"**{ticket['type']}**")
-                st.write(f"Date: {ticket['date']}")
+                st.write(f"Time of Order: {ticket['time_of_order']}")
+                st.write(f"Date of Planned Visit: {ticket['date_of_visit']}")
 
                 if st.button("See More", key=f"see_more_{i}"):
                     st.session_state.selected_ticket = i
