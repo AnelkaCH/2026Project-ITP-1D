@@ -23,7 +23,8 @@ def show_display_orders():
 
     # Display ticket details
     st.subheader(ticket["type"])
-    st.write("Date:", ticket["date"])
+    st.write("Date of Visit:", ticket["date_of_visit"])
+    st.write("Time of Order:", ticket["time_of_order"])
 
     st.divider()
 

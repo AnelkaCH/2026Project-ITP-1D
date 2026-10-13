@@ -2,6 +2,15 @@
     {
         "email": "a@mail.com",
         "password": "ssssssssssss1_A",
-        "tickets": []
+        "tickets": [
+            {
+                "type": "VIP Pass",
+                "date_of_visit": "2026-10-13",
+                "time_of_order": "2026-10-13 14:10:29",
+                "adults": 2,
+                "children": 2,
+                "total_price": 60.0
+            }
+        ]
     }
 ]
