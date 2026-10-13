@@ -7,6 +7,7 @@ from pages.login import show_login
 from pages.signup import show_signup
 from pages.browse_tickets import show_browse_tickets
 from pages.order_tickets import show_order_tickets
+from pages.display_orders import show_display_orders
 
 st.set_page_config(
     page_title="TicketHub",
@@ -43,6 +44,8 @@ elif page == "browse_tickets":
     show_browse_tickets()
 elif page == "order_tickets":
     show_order_tickets()
+elif page == "display_orders":
+    show_display_orders()
 else:
     st.session_state.current_page = "home"
     st.rerun()
