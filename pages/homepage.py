@@ -19,9 +19,9 @@ def show_home():
         st.write("Go there now!")
 
     with col2:
-         if st.button("Browse Tickets", use_container_width=True):
-                st.session_state.current_page = "browse_tickets"
-                st.rerun()
+        if st.button("Browse Tickets", use_container_width=True):
+            st.session_state.current_page = "browse_tickets"
+            st.rerun()
 
 
 

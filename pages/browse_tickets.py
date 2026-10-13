@@ -18,6 +18,10 @@ def show_browse_tickets():
     for ticket in ticket_types:
         st.subheader(ticket["name"])
         st.write(ticket["description"])
+        if st.button("Order Now", key=ticket["name"]):
+            st.session_state.current_page = "order_tickets"
+            st.session_state.current_ticket_order = ticket["id"]
+            st.rerun()
 
     st.divider()
         
