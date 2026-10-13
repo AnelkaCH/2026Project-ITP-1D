@@ -18,6 +18,7 @@ def show_login():
         if submitted:
             success, message = login_account(email.strip(), password)
             if success:
+                st.session_state.current_account = email.strip()
                 st.session_state.current_page = "home"
                 st.rerun()
             else:

@@ -31,7 +31,8 @@ def register_account(email, password):
 
     accounts.append({
         "email": email,
-        "password": password
+        "password": password,
+        "tickets": []
     })
 
     save_accounts(accounts)

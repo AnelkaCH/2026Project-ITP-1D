@@ -1,6 +1,22 @@
 [
     {
         "email": "test@gmail.com",
-        "password": "123123" 
+        "password": "123123",
+        "tickets": [
+            {
+                "type": "Normal Pass",
+                "date": "2026-10-13",
+                "adults": 2,
+                "children": 2,
+                "total_price": 30.0
+            },
+            {
+                "type": "VIP Pass",
+                "date": "2026-10-22",
+                "adults": 2,
+                "children": 3,
+                "total_price": 70.0
+            }
+        ]
     }
 ]

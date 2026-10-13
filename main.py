@@ -18,8 +18,17 @@ st.set_page_config(
 if "current_page" not in st.session_state:
     st.session_state.current_page = "signup"
 
+if "current_account" not in st.session_state:
+    st.session_state.current_account = None
+
 if "current_ticket_order" not in st.session_state:
     st.session_state.current_ticket_order = None
+
+if "quantity_adult" not in st.session_state:
+        st.session_state.quantity_adult = 0
+
+if "quantity_child" not in st.session_state:
+        st.session_state.quantity_child = 0
 
 # Route to the selected screen
 page = st.session_state.current_page

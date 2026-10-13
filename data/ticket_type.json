@@ -2,11 +2,15 @@
     {
         "id": 1,
         "name": "Normal Pass",
-        "description": "Basic type"
+        "description": "Basic type",
+        "adult_price": 10.0,
+        "child_price": 5.0
     },
     {
         "id": 2,
         "name": "VIP Pass",
-        "description": "VIP type"
+        "description": "VIP type",
+        "adult_price": 20.0,
+        "child_price": 10.0
     }
 ]
