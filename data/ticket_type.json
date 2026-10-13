@@ -1,0 +1,10 @@
+[
+    {
+        "name": "Normal Pass",
+        "description": "Basic type"
+    },
+    {
+        "name": "VIP Pass",
+        "description": "VIP type"
+    }
+]
