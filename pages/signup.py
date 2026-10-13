@@ -1,6 +1,8 @@
 import streamlit as st
 from services.new_account_service import register_account
 from services.validation_services import is_valid_email, is_valid_password
+import hashlib
+import os
 
 def show_signup():
     st.title("Create an Account")
@@ -30,10 +32,9 @@ def show_signup():
             st.error(mssg_password)
 
         else:
-            success, message = register_account(
-                email,
-                password
-            )
+            salt = os.urandom(32)
+            hashed_password = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), salt, 100000)
+            success, message = register_account(email, hashed_password.hex(), salt.hex())
 
             if success:
                 st.success(message)
