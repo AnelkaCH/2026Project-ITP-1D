@@ -1,14 +1,5 @@
-import json
 import streamlit as st
-from pathlib import Path
-# a comment
-DATA_FILE = (
-    Path(__file__).resolve().parent.parent/"data"/"ticket_type.json"
-)
-
-def load_ticket_types():
-    with open(DATA_FILE, "r", encoding="utf-8") as file:
-        return json.load(file)
+from services.json_service import load_ticket_types
 
 def show_browse_tickets():
     st.title("Browse Tickets")

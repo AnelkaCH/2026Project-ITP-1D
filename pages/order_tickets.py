@@ -1,23 +1,6 @@
-import json
 import streamlit as st
 from datetime import date
-from pathlib import Path
-
-TICKET_FILE = (
-    Path(__file__).resolve().parent.parent/"data"/"ticket_type.json"
-)
-
-ACC_FILE = (
-    Path(__file__).resolve().parent.parent/"data"/"account_info.json"
-)
-
-def load_ticket_types():
-    with open(TICKET_FILE, "r", encoding="utf-8") as file:
-        return json.load(file)
-
-def load_accounts():
-    with open(ACC_FILE, "r", encoding="utf-8") as file:
-        return json.load(file)
+from services.json_service import load_ticket_types, load_accounts, save_accounts
 
 def show_order_tickets():
     st.title("Order Tickets")
@@ -101,8 +84,7 @@ def show_order_tickets():
                 break
 
         # Save updated accounts
-        with open(ACC_FILE, "w", encoding="utf-8") as file:
-            json.dump(users, file, indent=4)
+        save_accounts(users)
 
         st.success("Order submitted successfully!")
 

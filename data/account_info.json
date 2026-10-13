@@ -23,6 +23,13 @@
                 "adults": 4,
                 "children": 9,
                 "total_price": 85.0
+            },
+            {
+                "type": "Normal Pass",
+                "date": "2026-10-09",
+                "adults": 5,
+                "children": 4,
+                "total_price": 70.0
             }
         ]
     },

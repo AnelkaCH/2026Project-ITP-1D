@@ -1,16 +1,5 @@
-import json
 import streamlit as st
-from pathlib import Path
-
-DATA_FILE = (
-    Path(__file__).resolve().parent.parent/"data"/"account_info.json"
-)
-
-def load_accounts():
-
-    with open(DATA_FILE, "r", encoding="utf-8") as file:
-        return json.load(file)
-
+from services.json_service import load_accounts
 
 def show_display_orders():
     users = load_accounts()
@@ -21,10 +10,6 @@ def show_display_orders():
         if user["email"] == st.session_state.current_account:
             current_user = user
             break
-
-    # if current_user is None:
-    #     st.error("Account not found.")
-    #     return
 
     # Get the selected ticket
     selected_ticket = st.session_state.selected_ticket
