@@ -1,5 +1,5 @@
 import streamlit as st
-from services.json_service import load_ticket_types, load_accounts, save_accounts
+from services.json_service import load_accounts
 
 def show_home():
     st.title("🎟️ TicketHub")
@@ -27,8 +27,10 @@ def show_home():
     users=load_accounts()
     for user in users:
         if user["email"] == st.session_state.current_account:
+            
             if not user["tickets"]:
                 st.write("You have no ticket orders yet.")
+
             for i, ticket in enumerate(user["tickets"]):
                 st.write(f"**{ticket['type']}**")
                 st.write(f"Time of Order: {ticket['time_of_order']}")
