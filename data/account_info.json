@@ -18,5 +18,18 @@
                 "total_price": 70.0
             }
         ]
+    },
+    {
+        "email": "adsad",
+        "password": "2026Project-ITP-1D",
+        "tickets": [
+            {
+                "type": "Normal Pass",
+                "date": "2026-10-17",
+                "adults": 2,
+                "children": 4,
+                "total_price": 40.0
+            }
+        ]
     }
 ]
