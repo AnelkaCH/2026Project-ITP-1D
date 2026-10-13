@@ -15,17 +15,18 @@ def show_login():
 
         if submitted:
             valid_email, mssg_email = is_valid_email(email)
-            success, message = login_account(email, password)
             if not email or not password:
                 st.error("Please fill in all required fields.")
             elif not valid_email:
                 st.error(mssg_email)
-            elif success:
-                st.session_state.current_account = email
-                st.session_state.current_page = "home"
-                st.rerun()
             else:
-                st.error(message)
+                success, message = login_account(email, password)
+                if success:
+                    st.session_state.current_account = email
+                    st.session_state.current_page = "home"
+                    st.rerun()
+                else:
+                    st.error(message)
 
     st.divider()
 

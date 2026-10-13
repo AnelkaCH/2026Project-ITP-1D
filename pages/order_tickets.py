@@ -2,20 +2,6 @@ import streamlit as st
 from datetime import date, datetime
 from services.json_service import load_ticket_types, load_accounts, save_accounts
 
-def increase_adult():
-    st.session_state.quantity_adult += 1
-
-def decrease_adult():
-    if st.session_state.quantity_adult > 0:
-        st.session_state.quantity_adult -= 1
-
-def increase_child():
-    st.session_state.quantity_child += 1
-
-def decrease_child():
-    if st.session_state.quantity_child > 0:
-        st.session_state.quantity_child -= 1
-
 def show_order_tickets():
     #Initialize variables
     ticket_types = load_ticket_types()
@@ -35,48 +21,36 @@ def show_order_tickets():
         value=date.today()
     )
 
-    col1, col2, col3, col4 = st.columns([2, 1, 1, 1])
+    t1col1, t1col2 = st.columns([2, 3])
 
-    with col1:
+    with t1col1:
         st.write("### Adult Tickets")
         st.write(f"Price: ${current_ticket['adult_price']} each")
     
-    with col2:
-        st.button("-", key="minus", on_click=decrease_adult)
-
-    with col3:
-        st.write(f"### {st.session_state.quantity_adult}")
-
-    with col4:
-        st.button("+", key="plus", on_click=increase_adult)
+    with t1col2:
+        st.session_state.adults = st.number_input("Number of adults", min_value=0, max_value=10, step=1)
 
     st.divider()
 
-    col5, col6, col7, col8 = st.columns([2, 1, 1, 1])
+    t2col1, t2col2 = st.columns([2, 3])
 
-    with col5:
+    with t2col1:
         st.write("### Child Tickets")
         st.write(f"Price: ${current_ticket['child_price']} each")
 
-    with col6:
-        st.button("-", key="minus_child", on_click=decrease_child)
-
-    with col7:
-        st.write(f"### {st.session_state.quantity_child}")
-
-    with col8:
-        st.button("+", key="plus_child", on_click=increase_child)
+    with t2col2:
+        st.session_state.children = st.number_input("Number of children", min_value=0, max_value=10, step=1)
 
     st.divider()
 
-    total_adult_price = st.session_state.quantity_adult * current_ticket["adult_price"]
-    total_child_price = st.session_state.quantity_child * current_ticket["child_price"]
+    total_adult_price = st.session_state.adults * current_ticket["adult_price"]
+    total_child_price = st.session_state.children * current_ticket["child_price"]
 
     total_price = total_adult_price + total_child_price
     st.subheader(f"Order Summary: ${total_price:.2f}")
 
-    col9, col10, col11 = st.columns([2, 2, 13])
-    with col9:
+    t3col1, t3col2, t3col3 = st.columns([2, 2, 13])
+    with t3col1:
         if st.button("Continue Purchase"):
             #Store current time
             current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -93,8 +67,8 @@ def show_order_tickets():
                         "type": current_ticket["name"],
                         "date_of_visit": str(selected_date),
                         "time_of_order": current_time,
-                        "adults": st.session_state.quantity_adult,
-                        "children": st.session_state.quantity_child,
+                        "adults": st.session_state.adults,
+                        "children": st.session_state.children,
                         "total_price": total_price
                     })
 
@@ -105,14 +79,14 @@ def show_order_tickets():
 
             st.success("Order submitted successfully!")
 
-            st.session_state.quantity_adult = 0
-            st.session_state.quantity_child = 0
+            st.session_state.adults = 0
+            st.session_state.children = 0
             st.session_state.current_page = "home"
             st.rerun()
 
-    with col10:
+    with t3col2:
         if st.button("Cancel Order"):
-            st.session_state.quantity_adult = 0
-            st.session_state.quantity_child = 0
+            st.session_state.adults = 0
+            st.session_state.children = 0
             st.session_state.current_page = "home"
             st.rerun()

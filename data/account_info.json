@@ -3,6 +3,15 @@
         "email": "test@gmail.com",
         "password": "63cc0ab05165438ce5291288ba3aec4369d299a277eeb220173cd48ff463ff22",
         "salt": "e15427d0996ad8d6d1e5dfb6f766c9b3929f1c3b12d8a7c7c3f53c363b34a9c2",
-        "tickets": []
+        "tickets": [
+            {
+                "type": "Normal Pass",
+                "date_of_visit": "2026-10-13",
+                "time_of_order": "2026-10-13 16:21:31",
+                "adults": 3,
+                "children": 3,
+                "total_price": 45.0
+            }
+        ]
     }
 ]
