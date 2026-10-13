@@ -1,16 +1,30 @@
+
 import streamlit as st
-import random
 
-st.title("Streamlit Test App")
-st.write("Your app is working!")
+# Importing the pages.
+from pages.homepage import show_home
+from pages.login import show_login
+from pages.signup import show_signup
 
-name = st.text_input("Enter your name")
+st.set_page_config(
+    page_title="TicketHub",
+    page_icon="🎟️",
+    layout="wide"
+)
 
-if st.button("Say Hello"):
-    st.success(f"Hello, {name}!")
+# Initialize the current screen
+if "current_page" not in st.session_state:
+    st.session_state.current_page = "signup"
 
-number = st.slider("Choose a number", 1, 100, 50)
-st.write(f"You selected {number}")
+# Route to the selected screen
+page = st.session_state.current_page
 
-if st.button("Generate Random Number"):
-    st.write(f"Random number: {random.randint(1, 100)}")
+if page == "home":
+    show_home()
+elif page == "login":
+    show_login()
+elif page == "signup":
+    show_signup()
+else:
+    st.session_state.current_page = "home"
+    st.rerun()
