@@ -2,11 +2,15 @@ import streamlit as st
 from services.json_service import load_accounts
 
 def show_home():
-    st.title("🎟️ TicketHub")
-    st.subheader("Your next experience starts here!")
-
-    st.write(
-        "Discover events, explore experiences, and find your next favourite event."
+    st.markdown(
+        """
+        <div class="title">
+            <div style="font-size: 3rem;">🏰</div>
+            <h1>Welcome to Wunderbar</h1>
+            <p>Your next adventure starts here!</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
     )
 
     st.divider()

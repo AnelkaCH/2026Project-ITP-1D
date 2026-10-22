@@ -2,8 +2,18 @@ import streamlit as st
 from services.json_service import load_ticket_types
 
 def show_browse_tickets():
-    st.title("Browse Tickets")
-    st.write("Select from the available ticket types below:")
+    if st.button("Exit to Home"):
+            st.switch_page(st.session_state.pages["home"])
+    
+    st.markdown(
+        """
+        <div class="title">
+            <h1>Embark on your journey today!</h1>
+            <p>Browse our available ticket types below.</p>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
     
     ticket_types = load_ticket_types()
     for ticket in ticket_types:
@@ -14,6 +24,3 @@ def show_browse_tickets():
             st.switch_page(st.session_state.pages["order_tickets"])
 
     st.divider()
-        
-    if st.button("Exit to Home"):
-        st.switch_page(st.session_state.pages["home"])

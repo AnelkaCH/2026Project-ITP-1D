@@ -8,6 +8,8 @@ from pages.browse_tickets import show_browse_tickets
 from pages.order_tickets import show_order_tickets
 from pages.display_orders import show_display_orders
 
+from ui.theme import apply_theme
+
 st.set_page_config(
     page_title="TicketHub",
     page_icon="🎟️",
@@ -60,5 +62,5 @@ with st.sidebar:
         st.page_link(home)
         st.page_link(browse_tickets)
         # order_tickets and display_orders are registered but not listed
-
+apply_theme()
 pg.run()

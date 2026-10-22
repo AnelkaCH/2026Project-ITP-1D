@@ -18,6 +18,23 @@
         "email": "test1@gmail.com",
         "password": "8dab751de3191151a37a41122318c4f86503122735eda235a86eb5c800e59761",
         "salt": "3c9c2c4eecc9ae45c3bbdc6a25566e88350129bacdae9e987f82e7d2f002745b",
-        "tickets": []
+        "tickets": [
+            {
+                "type": "Normal Pass",
+                "date_of_visit": "2026-10-31",
+                "time_of_order": "2026-10-22 14:45:30",
+                "adults": 8,
+                "children": 1,
+                "total_price": 85.0
+            },
+            {
+                "type": "Normal Pass",
+                "date_of_visit": "2026-10-22",
+                "time_of_order": "2026-10-22 14:53:54",
+                "adults": 5,
+                "children": 3,
+                "total_price": 65.0
+            }
+        ]
     }
 ]
