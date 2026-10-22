@@ -81,12 +81,10 @@ def show_order_tickets():
 
             st.session_state.adults = 0
             st.session_state.children = 0
-            st.session_state.current_page = "home"
-            st.rerun()
+            st.switch_page(st.session_state.pages["home"])
 
     with t3col2:
         if st.button("Cancel Order"):
             st.session_state.adults = 0
             st.session_state.children = 0
-            st.session_state.current_page = "home"
-            st.rerun()
+            st.switch_page(st.session_state.pages["home"])

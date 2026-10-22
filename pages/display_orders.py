@@ -35,6 +35,5 @@ def show_display_orders():
     st.divider()
 
     if st.button("Back to home"):
-        st.session_state.current_page = "home"
-        st.rerun()
+        st.switch_page(st.session_state.pages["home"])
 

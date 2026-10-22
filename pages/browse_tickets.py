@@ -10,12 +10,10 @@ def show_browse_tickets():
         st.subheader(ticket["name"])
         st.write(ticket["description"])
         if st.button("Order Now", key=ticket["name"]):
-            st.session_state.current_page = "order_tickets"
             st.session_state.current_ticket_order = ticket["id"]
-            st.rerun()
+            st.switch_page(st.session_state.pages["order_tickets"])
 
     st.divider()
         
     if st.button("Exit to Home"):
-        st.session_state.current_page = "home"
-        st.rerun()
+        st.switch_page(st.session_state.pages["home"])

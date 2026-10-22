@@ -44,5 +44,4 @@ def show_signup():
     st.divider()
     
     if st.button("Already have an account? Log in"):
-        st.session_state.current_page = "login"
-        st.rerun()
+        st.switch_page(st.session_state.pages["login"])

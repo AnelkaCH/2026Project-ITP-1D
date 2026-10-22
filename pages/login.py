@@ -23,13 +23,11 @@ def show_login():
                 success, message = login_account(email, password)
                 if success:
                     st.session_state.current_account = email
-                    st.session_state.current_page = "home"
-                    st.rerun()
+                    st.switch_page(st.session_state.pages["home"])
                 else:
                     st.error(message)
 
     st.divider()
 
     if st.button("Don't have an account? Sign up"):
-        st.session_state.current_page = "signup"
-        st.rerun()
+        st.switch_page(st.session_state.pages["signup"])

@@ -19,8 +19,7 @@ def show_home():
 
     with col2:
         if st.button("Browse Tickets", use_container_width=True):
-            st.session_state.current_page = "browse_tickets"
-            st.rerun()
+            st.switch_page(st.session_state.pages["browse_tickets"])
 
     st.subheader("Already bought tickets? View your orders!")
     
@@ -38,8 +37,7 @@ def show_home():
 
                 if st.button("See More", key=f"see_more_{i}"):
                     st.session_state.selected_ticket = i
-                    st.session_state.current_page = "display_orders"
-                    st.rerun()
+                    st.switch_page(st.session_state.pages["display_orders"])
 
                 st.divider()
 

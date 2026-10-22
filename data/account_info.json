@@ -13,5 +13,11 @@
                 "total_price": 45.0
             }
         ]
+    },
+    {
+        "email": "test1@gmail.com",
+        "password": "8dab751de3191151a37a41122318c4f86503122735eda235a86eb5c800e59761",
+        "salt": "3c9c2c4eecc9ae45c3bbdc6a25566e88350129bacdae9e987f82e7d2f002745b",
+        "tickets": []
     }
 ]
