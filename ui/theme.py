@@ -5,7 +5,7 @@ CSS = """
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&display=swap');
 
 h1, h2, h3 {
-    font-family: 'Cinzel', Georgia, serif !important;
+    font-family: 'Cinzel', Georgia, serif;
 }
 
 .title {

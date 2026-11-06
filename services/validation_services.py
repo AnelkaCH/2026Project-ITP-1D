@@ -2,7 +2,7 @@ import re
 
 def is_valid_email(email):
     pattern = r"^[\w.+-]+@[\w-]+\.[\w.-]+$"
-    return re.match(pattern, email) is not None, "Please enter a valid email address."
+    return re.match(pattern, email) is not None, "Please enter a valid email address." # remvoe this and then put into login
 
 def is_valid_password(password):
     has_number = False

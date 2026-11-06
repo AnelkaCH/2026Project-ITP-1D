@@ -18,7 +18,8 @@ def show_order_tickets():
     st.write("When do you plan to visit the park? Please select a date below.")
     selected_date = st.date_input(
         "Select a date",
-        value=date.today()
+        value=date.today(),
+        min_value=date.today()
     )
 
     t1col1, t1col2 = st.columns([2, 3])
