@@ -60,7 +60,6 @@ def show_order_tickets():
 
     total_price = total_adult_price + total_child_price
     
-    
     # Keep the voucher input in a single column narrower than half the page.
     voucher_col, _ = st.columns([1, 2])
     with voucher_col:
@@ -94,15 +93,16 @@ def show_order_tickets():
 
         # Change in the voucher code must be checked again
         if st.session_state.get("applied_voucher_code") != voucher_input.strip().lower():
+            # if invalid code remove typed voucher code and set it as none
             st.session_state.pop("applied_voucher", None)
             st.session_state.pop("applied_voucher_code", None)
 
         voucher = st.session_state.get("applied_voucher")
+        # for valid voucher, multiply to the total amount
         if voucher is not None:
             total_price *= voucher["amount_discounted"]
 
     st.subheader(f"Order Summary: ${total_price:.2f}")
-        
         
     '''
     Creates table, with three columns
