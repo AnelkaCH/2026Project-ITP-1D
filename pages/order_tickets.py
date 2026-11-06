@@ -143,15 +143,19 @@ def show_order_tickets():
                 allowed_types = []
 
                 # Check each allowed type, including values inside lists.
+                # Start with the ticket types allowed by this voucher.
                 pending_types = [eligible_types]
                 for value in pending_types:
+                    # check if the value is a dict
                     if isinstance(value, dict):
                         value = value.get(
                             "id", value.get("ticket_type_id", value.get("name", ""))
                         )
+                    # Add each item in a group to the list we still need to check.
                     if isinstance(value, (list, tuple, set)):
                         pending_types.extend(value)
                     elif value is not None:
+                        # Split text containing several types, then save each one in lowercase.
                         for item in str(value).replace("/", ",").replace("|", ",").replace(";", ",").split(","):
                             if item.strip():
                                 allowed_types.append(item.strip().lower())
