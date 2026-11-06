@@ -7,7 +7,9 @@ def show_order_tickets():
     ticket_types = load_ticket_types()
     current_ticket = None
 
+    # Loops through tickets types and get the id of each ticket, saves into memory
     for ticket in ticket_types:
+        # Check if the current ticket id is the correct ticket
         if ticket["id"] == st.session_state.current_ticket_order:
             current_ticket = ticket
             break
@@ -16,14 +18,22 @@ def show_order_tickets():
     st.write(current_ticket["description"])
 
     st.write("When do you plan to visit the park? Please select a date below.")
+    
+    # Creates a UI calender popup, sees days before and days today and after
     selected_date = st.date_input(
         "Select a date",
         value=date.today(),
         min_value=date.today()
     )
 
+    '''
+    Creates table, with two columns
+    Column 1 is the size of 2 columns merged together
+    Column 2 is the size of 3 columns merged together
+    '''
     t1col1, t1col2 = st.columns([2, 3])
 
+    # Writes the number of tickets and price respectively    
     with t1col1:
         st.write("### Adult Tickets")
         st.write(f"Price: ${current_ticket['adult_price']} each")
@@ -44,12 +54,18 @@ def show_order_tickets():
 
     st.divider()
 
+    # Calculate total price
     total_adult_price = st.session_state.adults * current_ticket["adult_price"]
     total_child_price = st.session_state.children * current_ticket["child_price"]
 
     total_price = total_adult_price + total_child_price
     st.subheader(f"Order Summary: ${total_price:.2f}")
 
+    '''
+    Creates table, with three columns
+    Column 1 & 2 is the size of 2 columns merged together
+    Column 3 is size of 13 columns merged together
+    '''
     t3col1, t3col2, t3col3 = st.columns([2, 2, 13])
     with t3col1:
         if st.button("Continue Purchase"):
@@ -80,11 +96,13 @@ def show_order_tickets():
 
             st.success("Order submitted successfully!")
 
+            # Resets session states for adult and children to 0
             st.session_state.adults = 0
             st.session_state.children = 0
             st.switch_page(st.session_state.pages["home"])
 
     with t3col2:
+        # Resets session states for adult and children to 0 if cancel order button is pressed
         if st.button("Cancel Order"):
             st.session_state.adults = 0
             st.session_state.children = 0
