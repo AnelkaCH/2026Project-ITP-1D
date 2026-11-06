@@ -76,6 +76,7 @@ def show_order_tickets():
         vouchers = load_valid_vouchers()
         if confirm_voucher:
             voucher = None
+            # checks for valid voucher
             for item in vouchers:
                 if item["voucher_name"].strip().lower() == voucher_input.strip().lower():
                     voucher = item
