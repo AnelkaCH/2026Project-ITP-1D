@@ -12,7 +12,8 @@ def register_account(email, password, salt):
         "email": email,
         "password": password,
         "salt": salt,
-        "tickets": []
+        "tickets": [],
+        "used_voucher": []
     })
 
     save_accounts(accounts)
