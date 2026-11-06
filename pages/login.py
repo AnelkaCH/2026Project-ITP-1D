@@ -14,13 +14,11 @@ def show_login():
         submitted = st.form_submit_button("Log In")
 
         if submitted:
-            # remove mssg_email and just check if valid_email is True or False
-            valid_email, mssg_email = is_valid_email(email)
+            valid_email = is_valid_email(email)
             if not email or not password:
                 st.error("Please fill in all required fields.")
-                # remove msg_email and replace with a str
             elif not valid_email:
-                st.error(mssg_email)
+                st.error("Please enter a valid email address.")
             else:
                 success, message = login_account(email, password)
                 if success:
