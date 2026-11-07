@@ -1,6 +1,8 @@
 import streamlit as st
 from datetime import date, datetime
-from services.json_service import load_ticket_types, load_accounts, save_accounts, load_valid_vouchers
+from services.json_service import load_ticket_types, load_accounts, save_accounts
+from services.voucher_validation import validate_and_apply_voucher
+
 
 def show_order_tickets():
     #Initialize variables
@@ -71,115 +73,10 @@ def show_order_tickets():
             )
             confirm_voucher = st.form_submit_button("Confirm Voucher")
 
-        # Find the voucher when the form is submitted.
-        vouchers = load_valid_vouchers()
-        if confirm_voucher:
-            # Clear the old voucher if the code changed.
-            if st.session_state.get("applied_voucher_code") != voucher_input.strip().lower():
-                st.session_state.pop("applied_voucher", None)
-                st.session_state.pop("applied_voucher_code", None)
-
-            voucher = None
-            # Find a voucher with this code.
-            for item in vouchers:
-                if item["voucher_name"].strip().lower() == voucher_input.strip().lower():
-                    voucher = item
-                    break
-            # Check whether this account has used the voucher before.
-            if voucher is not None:
-                users = load_accounts()
-                account = None
-                for user in users:
-                    if user.get("email") == st.session_state.current_account:
-                        account = user
-                        break
-                voucher_name = voucher["voucher_name"].strip().lower()
-                already_used = False
-                if account is not None:
-                    # Check this account's past orders.
-                    for order in account.get("tickets", []):
-                        order_voucher = order.get("voucher", "")
-                        # Support both old and new voucher formats.
-                        if isinstance(order_voucher, dict):
-                            order_voucher = order_voucher.get("voucher_name", "")
-                        else:
-                            order_voucher = order_voucher or ""
-
-                        # Ignore letter case and extra spaces.
-                        if order_voucher.strip().lower() == voucher_name:
-                            already_used = True
-                            break
-
-                if already_used:
-                    st.session_state.pop("applied_voucher", None)
-                    st.session_state.pop("applied_voucher_code", None)
-                    st.write("This voucher has been used!")
-                else:
-                    # Save the voucher so it remains applied after Streamlit reruns.
-                    st.session_state.applied_voucher = voucher
-                    st.session_state.applied_voucher_code = voucher_input.strip().lower()
-            
-            # Clear the applied voucher if the code is invalid.
-            else:
-                st.session_state.pop("applied_voucher", None)
-                st.session_state.pop("applied_voucher_code", None)
-                st.write("Invalid voucher")
-
-        voucher = st.session_state.get("applied_voucher")
-        if voucher is not None:
-            # Check whether the voucher is allowed for the selected ticket type.
-            eligible_types = None
-            for key in ("ticket_types", "ticket_type_ids", "ticket_type_id", "ticket_type"):
-                value = voucher.get(key)
-                if value is not None and value != "":
-                    eligible_types = value
-                    break
-
-            if eligible_types is None:
-                # A voucher without an explicit ticket type restriction is invalid.
-                voucher_applies = False
-            else:
-                # Gather allowed ticket IDs or names into a list for comparison.
-                allowed_types = []
-
-                # Check each allowed type, including values inside lists.
-                # Start with the ticket types allowed by this voucher.
-                pending_types = [eligible_types]
-                for value in pending_types:
-                    # check if the value is a dict
-                    if isinstance(value, dict):
-                        value = value.get(
-                            "id", value.get("ticket_type_id", value.get("name", ""))
-                        )
-                    # Add each item in a group to the list we still need to check.
-                    if isinstance(value, (list, tuple, set)):
-                        pending_types.extend(value)
-                    elif value is not None:
-                        # Split text containing several types, then save each one in lowercase.
-                        for item in str(value).replace("/", ",").replace("|", ",").replace(";", ",").split(","):
-                            if item.strip():
-                                allowed_types.append(item.strip().lower())
-
-                # Match the voucher using either the ticket ID or its name.
-                ticket_values = {
-                    str(current_ticket.get("id", "")).strip().lower(),
-                    str(current_ticket.get("name", "")).strip().lower(),
-                }
-                voucher_applies = bool(
-                    ticket_values.intersection(value.strip().lower() for value in allowed_types)
-                )
-
-            if voucher_applies:
-                # Apply a percentage discount or subtract a fixed amount.
-                discount = voucher["amount_discounted"]
-                discounted_price = total_price
-                if voucher.get("is_percentage", False):
-                    discounted_price *= 1 - discount / 100
-                else:
-                    discounted_price = max(0, discounted_price - discount)
-                total_price = discounted_price
-            else:
-                st.info("This voucher does not apply to the selected ticket type.")
+        # returns discounted price if any
+        voucher, total_price = validate_and_apply_voucher(
+            voucher_input, confirm_voucher, current_ticket, total_price
+        )
     st.subheader(f"Order Summary: ${total_price:.2f}")
         
     '''
