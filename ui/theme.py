@@ -1,11 +1,18 @@
 import streamlit as st
 
+'''
+Creates CSS styling
+'Cinzel' is priorized as the primary font for headers
+.title is the title class with following attributes
+headers within style class gets different colour and margins 
+'''
+
 CSS = """
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&display=swap');
 
 h1, h2, h3 {
-    font-family: 'Cinzel', Georgia, serif !important;
+    font-family: 'Cinzel', Georgia, serif;
 }
 
 .title {
@@ -20,7 +27,7 @@ h1, h2, h3 {
 .title p { margin: 0.5rem 0 0 0; color: #6B5A45; }
 </style>
 """
-"asdasdasd"
 
+# Turns CSS into HTML
 def apply_theme():
     st.markdown(CSS, unsafe_allow_html=True)

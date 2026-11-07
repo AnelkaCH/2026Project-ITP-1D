@@ -1,0 +1,23 @@
+[
+    {
+        "voucher_id": "1",
+        "voucher_name": "AHABLESSYOU",
+        "amount_discounted": 0.5,
+        "is_percentage": true,
+        "valid_type_for_voucher": [
+            {"ticket_type_id": "1", "ticket_type_name": "Normal Pass"},
+            {"ticket_type_id": "2", "ticket_type_name": "VIP Pass"}
+        ]
+    },
+
+    {
+        "voucher_id": "2",
+        "voucher_name": "HAIDILIAO",
+        "amount_discounted": 0.2,
+        "is_percentage": true,
+        "valid_type_for_voucher": [
+            {"ticket_type_id": "2", "ticket_type_name": "VIP Pass"}
+        ]
+    }
+
+]

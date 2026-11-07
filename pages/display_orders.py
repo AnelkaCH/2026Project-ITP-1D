@@ -28,12 +28,14 @@ def show_display_orders():
 
     st.divider()
 
+    # Display the amount of tickets and total price
     st.write("Adults:", ticket["adults"])
     st.write("Children:", ticket["children"])
     st.write("Total Price: $", ticket["total_price"])
 
     st.divider()
 
+    # if user presses back to home button goes back top home
     if st.button("Back to home"):
         st.switch_page(st.session_state.pages["home"])
 
