@@ -5,7 +5,7 @@ from services.json_service import load_ticket_types
 def show_browse_tickets():
     # Creates button to switch to home
     if st.button("Exit to Home"):
-            st.switch_page(st.session_state.pages["home"])
+        st.switch_page(st.session_state.pages["home"])
     
     # After login, produces landing page with title
     st.markdown(
@@ -26,6 +26,7 @@ def show_browse_tickets():
         st.subheader(ticket["name"])
         st.write(ticket["description"])
         # Button has a key to indicate uniqueness in the case of duplicate buttons of same name
+        
         if st.button("Order Now", key=ticket["name"]):
             # Creates some space in memory to save ticket selection of the user and goes back to the order ticket page
             st.session_state.current_ticket_order = ticket["id"]
