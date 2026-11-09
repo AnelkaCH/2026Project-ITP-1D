@@ -16,14 +16,14 @@ def apply_voucher(voucher_input, current_ticket, email):
         return False, None
 
     code = voucher_input.strip().lower()
-    voucher = next(
-        (v for v in load_valid_vouchers()
-         if v["voucher_name"].strip().lower() == code),
-        None
-    )
+    voucher = None
+    for v in load_valid_vouchers():
+        if v["voucher_name"].strip().lower() == code:
+            voucher = v
+            break
 
-    if voucher is None:
-        return False, None
+        if voucher is None:
+            return False, None
 
     # Ticket eligibility
     allowed_ids = {
