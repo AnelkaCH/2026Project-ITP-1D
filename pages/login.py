@@ -1,7 +1,7 @@
 import streamlit as st
-from services.new_account_service import login_account
-from services.validation_services import is_valid_email
 
+from services.new_account_service import login_account
+from services.validation_service import is_valid_email
 
 def show_login():
     st.title("Log In")

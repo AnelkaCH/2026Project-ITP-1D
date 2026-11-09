@@ -1,6 +1,6 @@
 import streamlit as st
-from services.json_service import load_ticket_types
 
+from services.json_service import load_ticket_types
 
 def show_browse_tickets():
     # Creates button to switch to home

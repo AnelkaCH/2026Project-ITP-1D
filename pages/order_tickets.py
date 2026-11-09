@@ -1,128 +1,165 @@
 import streamlit as st
 from datetime import date, datetime
-from services.json_service import load_ticket_types, load_accounts, save_accounts
-from services.voucher_validation import validate_and_apply_voucher
+from services.json_service import (
+    load_ticket_types, 
+    load_accounts, 
+    save_accounts
+    )
+from services.voucher_service import (
+    apply_voucher,
+    calculate_discount,
+    format_discount,
+    is_voucher_used,
+)
+
+
+def clear_order_state():
+    # Clear voucher related session state
+    for key in ("applied_voucher", "applied_voucher_code", "applied_voucher_ticket"):
+        st.session_state.pop(key, None)
+
+
+def get_current_ticket():
+    for ticket in load_ticket_types():
+        if ticket["id"] == st.session_state.get("current_ticket_order"):
+            return ticket
+    return None
 
 
 def show_order_tickets():
-    #Initialize variables
-    ticket_types = load_ticket_types()
-    current_ticket = None
+    current_ticket = get_current_ticket()
 
-    # Loops through tickets types and get the id of each ticket, saves into memory
-    for ticket in ticket_types:
-        # Check if the current ticket id is the correct ticket
-        if ticket["id"] == st.session_state.current_ticket_order:
-            current_ticket = ticket
-            break
+    if current_ticket is None:
+        st.error("Ticket type not found.")
+        st.stop()
 
-    st.title("Order Tickets. Currently ordering:", current_ticket["name"])
+    email = st.session_state.current_account
+
+    # Drop a voucher that was applied to a different ticket type
+    if st.session_state.get("applied_voucher_ticket") != current_ticket["id"]:
+        clear_order_state()
+
+    st.title(f"Order Tickets. Currently ordering: {current_ticket['name']}")
     st.write(current_ticket["description"])
 
     st.write("When do you plan to visit the park? Please select a date below.")
-    
-    # Creates a UI calender popup, sees days before and days today and after
+
     selected_date = st.date_input(
         "Select a date",
         value=date.today(),
         min_value=date.today()
     )
 
-    '''
-    Creates table, with two columns
-    Column 1 is the size of 2 columns merged together
-    Column 2 is the size of 3 columns merged together
-    '''
+    # Adult tickets
     t1col1, t1col2 = st.columns([2, 3])
-
-    # Writes the number of tickets and price respectively    
     with t1col1:
         st.write("### Adult Tickets")
         st.write(f"Price: ${current_ticket['adult_price']} each")
-    
     with t1col2:
-        st.session_state.adults = st.number_input("Number of adults", min_value=0, max_value=10, step=1)
+        adults = st.number_input("Number of adults", min_value=0, max_value=10, step=1)
 
     st.divider()
 
+    # Child tickets
     t2col1, t2col2 = st.columns([2, 3])
-
     with t2col1:
         st.write("### Child Tickets")
         st.write(f"Price: ${current_ticket['child_price']} each")
-
     with t2col2:
-        st.session_state.children = st.number_input("Number of children", min_value=0, max_value=10, step=1)
+        children = st.number_input("Number of children", min_value=0, max_value=10, step=1)
 
     st.divider()
 
-    # Calculate total price
-    total_adult_price = st.session_state.adults * current_ticket["adult_price"]
-    total_child_price = st.session_state.children * current_ticket["child_price"]
+    subtotal = (
+        adults * current_ticket["adult_price"]
+        + children * current_ticket["child_price"]
+    )
 
-    total_price = total_adult_price + total_child_price
-    
-    # Show the voucher form in a narrow column.
-    voucher_col, _ = st.columns([1, 2])
+    # Voucher section
+    voucher_col, applied_voucher_col = st.columns([1, 2])
+
     with voucher_col:
-        # Apply the voucher only when the button is clicked.
         with st.form("voucher_form"):
             voucher_input = st.text_input(
                 "Voucher code",
                 key=f"voucher_code_{current_ticket['id']}"
             )
-            confirm_voucher = st.form_submit_button("Confirm Voucher")
+            confirm_voucher = st.form_submit_button(
+                "Confirm Voucher",
+                disabled=st.session_state.get("applied_voucher") is not None
+            )
 
-        # returns discounted price if any
-        voucher, total_price = validate_and_apply_voucher(
-            voucher_input, confirm_voucher, current_ticket, total_price
-        )
+    if confirm_voucher:
+        is_valid, found = apply_voucher(voucher_input, current_ticket, email)
+
+        if is_valid:
+            st.session_state.applied_voucher = found
+            st.session_state.applied_voucher_ticket = current_ticket["id"]
+            st.rerun()
+        else:
+            st.error("Invalid or inapplicable voucher.")
+
+    applied = st.session_state.get("applied_voucher")
+    total_price = calculate_discount(applied, subtotal)
+
+    with applied_voucher_col:
+        if applied is not None:
+            st.write("### Applied Voucher")
+            st.write(applied["voucher_name"])
+            st.write(f"Discount: {format_discount(applied)}")
+
+            if st.button("Remove Voucher"):
+                clear_order_state()
+                st.rerun()
+        else:
+            st.write("### No voucher applied")
+
     st.subheader(f"Order Summary: ${total_price:.2f}")
-        
-    '''
-    Creates table, with three columns
-    Column 1 & 2 is the size of 2 columns merged together
-    Column 3 is size of 13 columns merged together
-    '''
-    t4col1, t4col2, t4col3 = st.columns([2, 2, 13])
+
+    has_tickets = (adults + children) > 0
+    if not has_tickets:
+        st.info("Select at least one ticket to continue.")
+
+    t4col1, t4col2, _ = st.columns([2, 2, 13])
+
     with t4col1:
-        if st.button("Continue Purchase"):
-            #Store current time
-            current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            
-            # Load existing accounts
+        if st.button("Continue Purchase", disabled=not has_tickets):
             users = load_accounts()
+            user = next((u for u in users if u["email"] == email), None)
 
-            # Find the current user
-            for user in users:
-                if user["email"] == st.session_state.current_account:
+            if user is None:
+                st.error("Account not found. Please log in again.")
+                st.stop()
 
-                    # Add the ticket order
-                    user["tickets"].append({
-                        "type": current_ticket["name"],
-                        "date_of_visit": str(selected_date),
-                        "time_of_order": current_time,
-                        "adults": st.session_state.adults,
-                        "children": st.session_state.children,
-                        "voucher": voucher,
-                        "total_price": total_price
-                    })
+            voucher_id = str(applied["voucher_id"]) if applied else None
 
-                    break
+            # Re-check at purchase time in case it was used elsewhere
+            if voucher_id is not None and is_voucher_used(email, voucher_id):
+                clear_order_state()
+                st.error("This voucher has already been used. It was removed from your order.")
+                st.stop()
 
-            # Save updated accounts
+            user.setdefault("tickets", []).append({
+                "type": current_ticket["name"],
+                "date_of_visit": str(selected_date),
+                "time_of_order": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+                "adults": adults,
+                "children": children,
+                "voucher_id": voucher_id,
+                "total_price": total_price
+            })
+
+            if voucher_id is not None:
+                used_vouchers = user.setdefault("used_voucher", [])
+                if voucher_id not in used_vouchers:
+                    used_vouchers.append(voucher_id)
+
             save_accounts(users)
 
-            st.success("Order submitted successfully!")
-
-            # Resets session states for adult and children to 0
-            st.session_state.adults = 0
-            st.session_state.children = 0
+            clear_order_state()
             st.switch_page(st.session_state.pages["home"])
 
     with t4col2:
-        # Resets session states for adult and children to 0 if cancel order button is pressed
         if st.button("Cancel Order"):
-            st.session_state.adults = 0
-            st.session_state.children = 0
+            clear_order_state()
             st.switch_page(st.session_state.pages["home"])

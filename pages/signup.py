@@ -1,8 +1,12 @@
 import streamlit as st
-from services.new_account_service import register_account
-from services.validation_services import is_valid_email, is_valid_password
 import hashlib
 import os
+
+from services.new_account_service import register_account
+from services.validation_service import (
+    is_valid_email, 
+    is_valid_password
+)
 
 def show_signup():
     st.title("Create an Account")
@@ -15,7 +19,7 @@ def show_signup():
         submitted = st.form_submit_button("Sign Up")
 
     if submitted:
-        valid_email, mssg_email = is_valid_email(email)
+        valid_email = is_valid_email(email)
         valid_password, mssg_password = is_valid_password(password)
 
         if not email or not password or not confirm_password:
@@ -23,7 +27,7 @@ def show_signup():
 
 
         elif not valid_email:
-            st.error(mssg_email)
+            st.error("Invalid email format. Please enter a valid email address.")
 
         elif password != confirm_password:
             st.error("Passwords do not match.")

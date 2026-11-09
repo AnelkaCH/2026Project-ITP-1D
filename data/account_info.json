@@ -59,6 +59,36 @@
                 "children": 0,
                 "total_price": 5.0
             }
+        ],
+        "used_voucher": []
+    },
+    {
+        "email": "test2@gmail.com",
+        "password": "1d2338b16e9c546a6bb88b6c72184828629414276d65ebc67d0c7dfa7a8525f3",
+        "salt": "38f7cd8e19a7bc4e232cc85d02f1ca818a7b8b075ceab697f9a71c0067b56f50",
+        "tickets": [
+            {
+                "type": "Normal Pass",
+                "date_of_visit": "2026-11-09",
+                "time_of_order": "2026-11-09 00:04:40",
+                "adults": 2,
+                "children": 2,
+                "voucher_id": "1",
+                "total_price": 15.0
+            },
+            {
+                "type": "VIP Pass",
+                "date_of_visit": "2026-11-09",
+                "time_of_order": "2026-11-09 15:05:14",
+                "adults": 1,
+                "children": 1,
+                "voucher_id": "2",
+                "total_price": 24.0
+            }
+        ],
+        "used_voucher": [
+            "1",
+            "2"
         ]
     }
 ]
