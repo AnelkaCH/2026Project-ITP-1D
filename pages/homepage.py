@@ -1,19 +1,22 @@
-import streamlit as st
-
 from services.json_service import load_accounts
 
-def show_home():
-    st.markdown(
-        """
-        <div class="title">
-            <div style="font-size: 3rem;">🏰</div>
-            <h1>Welcome to Wunderbar</h1>
-            <p>Your next adventure starts here!</p>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+from pathlib import Path
 
+import streamlit as st
+
+CAROUSEL_DIR = Path("static/images/carousel")
+IMAGES = sorted(p.name for p in CAROUSEL_DIR.glob("*.jpg"))
+
+
+def show_carousel():
+    imgs = "".join(
+        f'<img src="/app/static/images/carousel/{name}">' for name in IMAGES
+    )
+    st.markdown(f'<div class="carousel">{imgs}</div>', unsafe_allow_html=True)
+
+def show_home():
+    show_carousel()
+    
     st.divider()
 
     col1, col2 = st.columns(2)

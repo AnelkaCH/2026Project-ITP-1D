@@ -40,7 +40,7 @@ def show_browse_tickets():
                 with st.container(border=True):
 
                     st.image(
-                        f"images/{ticket['image']}",
+                        f"static/images/{ticket['image']}",
                         use_container_width=True
                     )
 

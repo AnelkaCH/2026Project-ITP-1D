@@ -66,6 +66,40 @@ h1, h2, h3 {
     color: white;
     border: none;
 }
+.carousel {
+    position: relative;
+    width: 100%;
+    height: 500px;
+    overflow: hidden;
+    border-radius: 20px;
+    background: #F7F1E3;
+}
+
+.carousel img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    animation: carousel-fade 20s infinite;
+}
+
+.carousel img:nth-child(2) { animation-delay: 5s; }
+.carousel img:nth-child(3) { animation-delay: 10s; }
+.carousel img:nth-child(4) { animation-delay: 15s; }
+
+.carousel:hover img {
+    animation-play-state: paused;
+}
+
+@keyframes carousel-fade {
+    0%   { opacity: 0; }
+    4%   { opacity: 1; }
+    25%  { opacity: 1; }
+    29%  { opacity: 0; }
+    100% { opacity: 0; }
+}
 
 @media (max-width: 640px) {
     .block-container {
@@ -84,7 +118,12 @@ h1, h2, h3 {
     .stImage img {
         height: 180px;
     }
+
+    .carousel {
+        height: 260px;
+    }
 }
+
 </style>
 """
 
