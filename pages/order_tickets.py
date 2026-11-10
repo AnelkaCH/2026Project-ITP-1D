@@ -1,17 +1,7 @@
 import streamlit as st
 from datetime import date, datetime
-from services.json_service import (
-    load_ticket_types, 
-    load_accounts, 
-    save_accounts
-    )
-from services.voucher_service import (
-    apply_voucher,
-    calculate_discount,
-    format_discount,
-    is_voucher_used,
-)
-
+from services.json_service import load_ticket_types, load_accounts, save_accounts
+from services.voucher_service import apply_voucher, calculate_discount, check_voucher, format_discount
 
 def clear_order_state():
     # Clear voucher related session state
@@ -90,16 +80,24 @@ def show_order_tickets():
             )
 
     if confirm_voucher:
-        is_valid, found = apply_voucher(voucher_input, current_ticket, email)
+        is_valid, found, voucher_mssg = apply_voucher(voucher_input, current_ticket, email, selected_date)
 
         if is_valid:
             st.session_state.applied_voucher = found
             st.session_state.applied_voucher_ticket = current_ticket["id"]
             st.rerun()
         else:
-            st.error("Invalid or inapplicable voucher.")
+            st.error(voucher_mssg)
 
     applied = st.session_state.get("applied_voucher")
+
+    if applied is not None:
+        error = check_voucher(applied, current_ticket, email, selected_date)
+        if error:
+            clear_order_state()
+            st.warning(f"Voucher removed: {error}")
+            applied = None
+
     total_price = calculate_discount(applied, subtotal)
 
     with applied_voucher_col:
@@ -125,19 +123,17 @@ def show_order_tickets():
     with t4col1:
         if st.button("Continue Purchase", disabled=not has_tickets):
             users = load_accounts()
-            user = next((u for u in users if u["email"] == email), None)
+            user = None
+            for u in users:
+                if u["email"] == email:
+                    user = u
+                    break
 
             if user is None:
                 st.error("Account not found. Please log in again.")
                 st.stop()
 
             voucher_id = str(applied["voucher_id"]) if applied else None
-
-            # Re-check at purchase time in case it was used elsewhere
-            if voucher_id is not None and is_voucher_used(email, voucher_id):
-                clear_order_state()
-                st.error("This voucher has already been used. It was removed from your order.")
-                st.stop()
 
             user.setdefault("tickets", []).append({
                 "type": current_ticket["name"],

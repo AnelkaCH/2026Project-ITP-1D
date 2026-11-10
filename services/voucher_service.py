@@ -1,8 +1,63 @@
 from services.json_service import load_accounts, load_valid_vouchers
+from datetime import date
+
+
+def find_voucher(code):
+    code = code.strip().lower()
+    voucher = None
+    for v in load_valid_vouchers():
+        if v["voucher_name"].strip().lower() == code:
+            voucher = v
+            break
+    return voucher
+
+def check_voucher(voucher, ticket, email, visit_date):
+    allowed_ids = {
+        str(t.get("ticket_type_id"))
+        for t in voucher.get("valid_type_for_voucher", [])
+    }
+    if str(ticket["id"]) not in allowed_ids:
+        return "This voucher is not applicable to the selected ticket type."
+
+    if not is_voucher_date_valid(voucher, visit_date):
+        return f"This voucher is only valid from {voucher['valid_from']} to {voucher['valid_until']}."
+
+    if is_voucher_used(email, voucher["voucher_id"]):
+        return "This voucher has already been used by your account."
+
+    return None
+
+
+def apply_voucher(voucher_input, ticket, email, visit_date):
+    if not voucher_input or not voucher_input.strip():
+        return False, None, "Please input a voucher code."
+
+    voucher = find_voucher(voucher_input)
+    if voucher is None:
+        return False, None, "Invalid voucher code."
+
+    error = check_voucher(voucher, ticket, email, visit_date)
+    if error:
+        return False, None, error
+
+    return True, voucher, "Voucher applied successfully."
+
+def is_voucher_date_valid(voucher, visit_date):
+    try:
+        valid_from = date.fromisoformat(voucher["valid_from"])
+        valid_until = date.fromisoformat(voucher["valid_until"])
+    except (KeyError, ValueError):
+        return False
+
+    return valid_from <= visit_date <= valid_until
 
 def is_voucher_used(email, voucher_id):
     accounts = load_accounts()
-    account = next((u for u in accounts if u.get("email") == email), None)
+    account = None
+    for u in accounts:
+        if u.get("email") == email:
+            account = u
+            break
  
     if account is None:
         return True  # unknown account: treat as not allowed
@@ -11,34 +66,19 @@ def is_voucher_used(email, voucher_id):
     return str(voucher_id) in used
 
 
-def apply_voucher(voucher_input, current_ticket, email):
+def apply_voucher(voucher_input, ticket, email, visit_date):
     if not voucher_input or not voucher_input.strip():
-        return False, None
+        return False, None, "Please input a voucher code."
 
-    code = voucher_input.strip().lower()
-    voucher = None
-    for v in load_valid_vouchers():
-        if v["voucher_name"].strip().lower() == code:
-            voucher = v
-            break
+    voucher = find_voucher(voucher_input)
+    if voucher is None:
+        return False, None, "Invalid voucher code."
 
-        if voucher is None:
-            return False, None
+    error = check_voucher(voucher, ticket, email, visit_date)
+    if error:
+        return False, None, error
 
-    # Ticket eligibility
-    allowed_ids = {
-        str(t.get("ticket_type_id"))
-        for t in voucher.get("valid_type_for_voucher", [])
-    }
-
-    if str(current_ticket.get("id")) not in allowed_ids:
-        return False, None
-
-    # Already used by this account
-    if is_voucher_used(email, voucher.get("voucher_id")):
-        return False, None
-
-    return True, voucher
+    return True, voucher, "Voucher applied successfully."
 
 
 def calculate_discount(voucher, total_price):

@@ -7,7 +7,9 @@
         "valid_type_for_voucher": [
             {"ticket_type_id": "1", "ticket_type_name": "Normal Pass"},
             {"ticket_type_id": "2", "ticket_type_name": "VIP Pass"}
-        ]
+        ],
+        "valid_from": "2026-11-11",
+        "valid_until": "2026-11-15"
     },
 
     {
@@ -17,7 +19,22 @@
         "is_percentage": true,
         "valid_type_for_voucher": [
             {"ticket_type_id": "2", "ticket_type_name": "VIP Pass"}
-        ]
+        ],
+        "valid_from": "2026-11-13",
+        "valid_until": "2026-11-20"
+    },
+
+    {
+        "voucher_id": "3",
+        "voucher_name": "VIP1",
+        "amount_discounted": 0.2,
+        "is_percentage": true,
+        "valid_type_for_voucher": [
+            {"ticket_type_id": "1", "ticket_type_name": "Normal Pass"},
+            {"ticket_type_id": "2", "ticket_type_name": "VIP Pass"}
+        ],
+        "valid_from": "2026-11-11",
+        "valid_until": "2026-11-15"
     }
 
 ]
