@@ -71,7 +71,6 @@ h1, h2, h3 {
     width: 100%;
     height: 500px;
     overflow: hidden;
-    border-radius: 20px;
     background: #F7F1E3;
 }
 
