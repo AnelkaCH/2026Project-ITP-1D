@@ -118,44 +118,46 @@ def show_order_tickets():
     if not has_tickets:
         st.info("Select at least one ticket to continue.")
 
-    t4col1, t4col2, _ = st.columns([2, 2, 13])
+    # Horizontal container: buttons sit side by side at their natural width,
+    # so neither label wraps and both buttons stay the same height
+    with st.container(horizontal=True):
+        continue_clicked = st.button("Continue Purchase", disabled=not has_tickets)
+        cancel_clicked = st.button("Cancel Order")
 
-    with t4col1:
-        if st.button("Continue Purchase", disabled=not has_tickets):
-            users = load_accounts()
-            user = None
-            for u in users:
-                if u["email"] == email:
-                    user = u
-                    break
+    if continue_clicked:
+        users = load_accounts()
+        user = None
+        for u in users:
+            if u["email"] == email:
+                user = u
+                break
 
-            if user is None:
-                st.error("Account not found. Please log in again.")
-                st.stop()
+        if user is None:
+            st.error("Account not found. Please log in again.")
+            st.stop()
 
-            voucher_id = str(applied["voucher_id"]) if applied else None
+        voucher_id = str(applied["voucher_id"]) if applied else None
 
-            user.setdefault("tickets", []).append({
-                "type": current_ticket["name"],
-                "date_of_visit": str(selected_date),
-                "time_of_order": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-                "adults": adults,
-                "children": children,
-                "voucher_id": voucher_id,
-                "total_price": total_price
-            })
+        user.setdefault("tickets", []).append({
+            "type": current_ticket["name"],
+            "date_of_visit": str(selected_date),
+            "time_of_order": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "adults": adults,
+            "children": children,
+            "voucher_id": voucher_id,
+            "total_price": total_price
+        })
 
-            if voucher_id is not None:
-                used_vouchers = user.setdefault("used_voucher", [])
-                if voucher_id not in used_vouchers:
-                    used_vouchers.append(voucher_id)
+        if voucher_id is not None:
+            used_vouchers = user.setdefault("used_voucher", [])
+            if voucher_id not in used_vouchers:
+                used_vouchers.append(voucher_id)
 
-            save_accounts(users)
+        save_accounts(users)
 
-            clear_order_state()
-            st.switch_page(st.session_state.pages["home"])
+        clear_order_state()
+        st.switch_page(st.session_state.pages["home"])
 
-    with t4col2:
-        if st.button("Cancel Order"):
-            clear_order_state()
-            st.switch_page(st.session_state.pages["home"])
+    if cancel_clicked:
+        clear_order_state()
+        st.switch_page(st.session_state.pages["home"])

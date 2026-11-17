@@ -53,7 +53,7 @@ def show_browse_tickets():
                     st.space("stretch")
 
                     if st.button(
-                        "Order Now →",
+                        "Order Now",
                         key=f"order_{ticket['id']}",
                         width="stretch"
                     ):
