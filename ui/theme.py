@@ -36,10 +36,8 @@ h1, h2, h3 {
 }
 
 .block-container {
-    max-width: 100%;
+    max-width: 1200px;
     padding-top: 3rem;
-    padding-left: 3rem;
-    padding-right: 3rem;
 }
 
 .stImage img {
@@ -68,15 +66,10 @@ h1, h2, h3 {
     color: white;
     border: none;
 }
-.ticket-desc {
-    min-height: 3.3em;   /* room for two lines of text */
-    margin-bottom: 1rem;
-}
 .carousel {
     position: relative;
     width: 100%;
-    aspect-ratio: 2 / 1;
-    max-height: 70vh;
+    height: 500px;
     overflow: hidden;
     background: #F7F1E3;
 }
@@ -86,8 +79,7 @@ h1, h2, h3 {
     inset: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
-    object-position: center;
+    object-fit: contain;
     opacity: 0;
     animation: carousel-fade 20s infinite;
 }
@@ -127,7 +119,7 @@ h1, h2, h3 {
     }
 
     .carousel {
-        aspect-ratio: 4 / 3;
+        height: 260px;
     }
 }
 
