@@ -37,7 +37,8 @@ def show_browse_tickets():
             ticket = ticket_types[index]
 
             with col:
-                with st.container(border=True):
+                # height="stretch" makes every card in the row match the tallest one
+                with st.container(border=True, height="stretch"):
 
                     st.image(
                         f"static/images/{ticket['image']}",
@@ -47,6 +48,9 @@ def show_browse_tickets():
                     st.subheader(ticket["name"])
 
                     st.write(ticket["description"])
+
+                    # Fill leftover space so the buttons line up at the bottom
+                    st.space("stretch")
 
                     if st.button(
                         "Order Now →",
