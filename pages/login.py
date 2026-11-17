@@ -20,9 +20,9 @@ def show_login():
             elif not valid_email:
                 st.error("Please enter a valid email address.")
             else:
-                success, message = login_account(email, password)
+                success, message, account_email = login_account(email, password)
                 if success:
-                    st.session_state.current_account = email
+                    st.session_state.current_account = account_email
                     st.switch_page(st.session_state.pages["home"])
                 else:
                     st.error(message)

@@ -26,7 +26,8 @@ def login_account(email, password):
         if account["email"].lower() == email.lower():
             hash_object = hashlib.pbkdf2_hmac('sha256', password.encode('utf-8'), bytes.fromhex(account["salt"]), 100000)
             if hash_object == bytes.fromhex(account["password"]):
-                return True, "Login successful!"
+                # Return the email as stored, so later lookups match exactly
+                return True, "Login successful!", account["email"]
             else:
-                return False, "Invalid email or password."
-    return False, "Invalid email or password."
+                return False, "Invalid email or password.", None
+    return False, "Invalid email or password.", None
