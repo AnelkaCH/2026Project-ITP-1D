@@ -1,11 +1,11 @@
 import json
 from pathlib import Path
 
-ACC_FILE = (Path(__file__).resolve().parent.parent/"data"/"account_info.json")
+ACC_FILE = (Path(__file__).resolve().parent.parent/"data"/"account_info.json") #Importing all the json files
 TICKET_FILE = (Path(__file__).resolve().parent.parent/"data"/"ticket_type.json")
 VOUCHER_FILE = (Path(__file__).resolve().parent.parent/"data"/"valid_vouchers.json")
 
-def load_accounts():
+def load_accounts(): #Defining the function to call all the data files
     with open(ACC_FILE, "r", encoding="utf-8") as file:
         return json.load(file)
 
