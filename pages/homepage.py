@@ -26,7 +26,7 @@ def show_home():
         st.write("Go there now!")
 
     with col2:
-        if st.button("Browse Tickets", use_container_width=True):
+        if st.button("Browse Tickets", width="stretch"):
             st.switch_page(st.session_state.pages["browse_tickets"])
 
     st.subheader("Already bought tickets? View your orders!")
