@@ -36,8 +36,10 @@ h1, h2, h3 {
 }
 
 .block-container {
-    max-width: 1200px;
+    max-width: 100%;
     padding-top: 3rem;
+    padding-left: 3rem;
+    padding-right: 3rem;
 }
 
 .stImage img {
