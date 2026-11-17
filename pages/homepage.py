@@ -1,18 +1,57 @@
 from services.json_service import load_accounts
 
 from pathlib import Path
+import time
 
 import streamlit as st
 
 CAROUSEL_DIR = Path("static/images/carousel")
-IMAGES = sorted(p.name for p in CAROUSEL_DIR.glob("*.jpg"))
+IMAGES = sorted(CAROUSEL_DIR.glob("*.jpg"))
+SLIDE_SECONDS = 5  # how long each slide stays before auto-advancing
 
 
+def change_slide(step):
+    # Move forward (+1) or back (-1), wrapping around at either end
+    st.session_state.carousel_index = (
+        st.session_state.carousel_index + step
+    ) % len(IMAGES)
+    # Restart the timer so a manual click gets a full slide duration
+    st.session_state.carousel_last_change = time.time()
+
+
+# A fragment reruns on its own every SLIDE_SECONDS without reloading the rest of the page
+@st.fragment(run_every=SLIDE_SECONDS)
 def show_carousel():
-    imgs = "".join(
-        f'<img src="/app/static/images/carousel/{name}">' for name in IMAGES
-    )
-    st.markdown(f'<div class="carousel">{imgs}</div>', unsafe_allow_html=True)
+    if not IMAGES:
+        return
+
+    if "carousel_index" not in st.session_state:
+        st.session_state.carousel_index = 0
+        st.session_state.carousel_last_change = time.time()
+
+    # Auto-advance once enough time has passed since the last change
+    # (0.5s of slack so the timer's tick isn't missed by a few milliseconds)
+    if time.time() - st.session_state.carousel_last_change >= SLIDE_SECONDS - 0.5:
+        change_slide(1)
+
+    index = st.session_state.carousel_index
+
+    # Every slide is always on the page, stacked on top of each other (see theme.py),
+    # so all images are already loaded and nothing has to download mid-fade
+    with st.container(key="carousel"):
+        for i, image in enumerate(IMAGES):
+            with st.container(key=f"slide_{i}"):
+                st.image(str(image), width="stretch")
+
+    # Make only the current slide visible; the CSS transition crossfades the change
+    st.html(f"<style>.st-key-slide_{index} {{ opacity: 1; }}</style>")
+
+    # Controls: previous button, position dots, next button
+    with st.container(horizontal=True, horizontal_alignment="center", vertical_alignment="center"):
+        st.button(":material/chevron_left:", key="carousel_prev", on_click=change_slide, args=(-1,))
+        dots = " ".join("●" if i == index else "○" for i in range(len(IMAGES)))
+        st.markdown(dots)
+        st.button(":material/chevron_right:", key="carousel_next", on_click=change_slide, args=(1,))
 
 def show_home():
     show_carousel()

@@ -66,38 +66,30 @@ h1, h2, h3 {
     color: white;
     border: none;
 }
-.carousel {
-    position: relative;
-    width: 100%;
-    height: 500px;
-    overflow: hidden;
-    background: #F7F1E3;
+/* Carousel: a one-cell grid, so every slide sits in the same spot, stacked */
+.st-key-carousel {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);  /* one full-width column */
 }
 
-.carousel img {
-    position: absolute;
-    inset: 0;
+.st-key-carousel > * {
+    grid-area: 1 / 1;
     width: 100%;
-    height: 100%;
-    object-fit: contain;
+}
+
+/* Slides are invisible by default; homepage.py sets opacity: 1 on the current one.
+   The transition makes the old slide fade out while the new one fades in. */
+[class*="st-key-slide_"] {
     opacity: 0;
-    animation: carousel-fade 20s infinite;
+    transition: opacity 0.8s ease-in-out;
 }
 
-.carousel img:nth-child(2) { animation-delay: 5s; }
-.carousel img:nth-child(3) { animation-delay: 10s; }
-.carousel img:nth-child(4) { animation-delay: 15s; }
-
-.carousel:hover img {
-    animation-play-state: paused;
-}
-
-@keyframes carousel-fade {
-    0%   { opacity: 0; }
-    4%   { opacity: 1; }
-    25%  { opacity: 1; }
-    29%  { opacity: 0; }
-    100% { opacity: 0; }
+/* Carousel images override the 200px card image height */
+.st-key-carousel .stImage img {
+    height: 500px;
+    object-fit: contain;
+    background: #F7F1E3;
+    border-radius: 0;
 }
 
 @media (max-width: 640px) {
@@ -118,7 +110,7 @@ h1, h2, h3 {
         height: 180px;
     }
 
-    .carousel {
+    .st-key-carousel .stImage img {
         height: 260px;
     }
 }
