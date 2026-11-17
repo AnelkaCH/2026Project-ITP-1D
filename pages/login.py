@@ -5,7 +5,7 @@ from services.validation_service import is_valid_email
 
 def show_login():
     st.title("Log In")
-    st.write("Welcome back to TicketHub!")
+    st.write("Welcome back to Wunderbar!")
 
     with st.form("login_form"):
         email = st.text_input("Email")
