@@ -3,6 +3,7 @@ from pathlib import Path
 
 ACC_FILE = (Path(__file__).resolve().parent.parent/"data"/"account_info.json")
 TICKET_FILE = (Path(__file__).resolve().parent.parent/"data"/"ticket_type.json")
+VOUCHER_FILE = (Path(__file__).resolve().parent.parent/"data"/"valid_vouchers.json")
 
 def load_accounts():
     with open(ACC_FILE, "r", encoding="utf-8") as file:
@@ -15,3 +16,7 @@ def load_ticket_types():
 def save_accounts(accounts):
     with open(ACC_FILE, "w", encoding="utf-8") as file:
         json.dump(accounts, file, indent=4)
+    
+def load_valid_vouchers():
+    with open(VOUCHER_FILE, "r",encoding="utf-8") as file:
+        return json.load(file)

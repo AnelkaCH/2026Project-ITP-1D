@@ -1,16 +1,26 @@
 [
     {
         "id": 1,
-        "name": "Normal Pass",
-        "description": "Basic type",
-        "adult_price": 10.0,
-        "child_price": 5.0
+        "name": "SR Standard Pass",
+        "image": "sr_standard_pass.webp",
+        "description": "Enjoy full access to the park and its attractions with a standard admission ticket.",
+        "adult_price": 25.0,
+        "child_price": 15.0
     },
     {
         "id": 2,
-        "name": "VIP Pass",
-        "description": "VIP type",
-        "adult_price": 20.0,
-        "child_price": 10.0
+        "name": "SR Special Pass",
+        "image": "sr_special_pass.webp",
+        "description": "Enjoy full park access with exclusive discounts of approximately 30% on food at participating park outlets.",
+        "adult_price": 35.0,
+        "child_price": 21.0
+    },
+    {
+        "id": 3,
+        "name": "SR Express Pass",
+        "image": "sr_express_pass.webp",
+        "description": "Enjoy all Special Pass benefits, including approximately 30% food discounts, plus priority access through express lanes at selected attractions.",
+        "adult_price": 45.0,
+        "child_price": 27.0
     }
 ]

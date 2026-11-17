@@ -1,7 +1,7 @@
 import streamlit as st
-from services.new_account_service import login_account
-from services.validation_services import is_valid_email
 
+from services.new_account_service import login_account
+from services.validation_service import is_valid_email
 
 def show_login():
     st.title("Log In")
@@ -14,11 +14,11 @@ def show_login():
         submitted = st.form_submit_button("Log In")
 
         if submitted:
-            valid_email, mssg_email = is_valid_email(email)
+            valid_email = is_valid_email(email)
             if not email or not password:
                 st.error("Please fill in all required fields.")
             elif not valid_email:
-                st.error(mssg_email)
+                st.error("Please enter a valid email address.")
             else:
                 success, message = login_account(email, password)
                 if success:
