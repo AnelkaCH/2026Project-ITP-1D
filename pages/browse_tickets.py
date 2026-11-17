@@ -41,7 +41,7 @@ def show_browse_tickets():
 
                     st.image(
                         f"static/images/{ticket['image']}",
-                        use_container_width=True
+                        width="stretch"
                     )
 
                     st.subheader(ticket["name"])
@@ -51,15 +51,10 @@ def show_browse_tickets():
                     if st.button(
                         "Order Now →",
                         key=f"order_{ticket['id']}",
-                        use_container_width=True
+                        width="stretch"
                     ):
                         st.session_state.current_ticket_order = ticket["id"]
                         st.switch_page(
                             st.session_state.pages["order_tickets"]
                         )
-
-
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
 

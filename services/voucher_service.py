@@ -66,21 +66,6 @@ def is_voucher_used(email, voucher_id):
     return str(voucher_id) in used
 
 
-def apply_voucher(voucher_input, ticket, email, visit_date):
-    if not voucher_input or not voucher_input.strip():
-        return False, None, "Please input a voucher code."
-
-    voucher = find_voucher(voucher_input)
-    if voucher is None:
-        return False, None, "Invalid voucher code."
-
-    error = check_voucher(voucher, ticket, email, visit_date)
-    if error:
-        return False, None, error
-
-    return True, voucher, "Voucher applied successfully."
-
-
 def calculate_discount(voucher, total_price):
     # to calculate discount
     if voucher is None:

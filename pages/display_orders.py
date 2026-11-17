@@ -12,12 +12,14 @@ def show_display_orders():
             current_user = user
             break
 
-    # Get the selected ticket
-    selected_ticket = st.session_state.selected_ticket
-    tickets = current_user["tickets"]
+    # Get the selected ticket (may be missing if the page was opened directly)
+    selected_ticket = st.session_state.get("selected_ticket")
+    tickets = current_user.get("tickets", []) if current_user else []
 
-    if selected_ticket < 0 or selected_ticket >= len(tickets):
-        st.error("Ticket not found.")
+    if selected_ticket is None or not (0 <= selected_ticket < len(tickets)):
+        st.info("No order selected. Choose an order from the home page.")
+        if st.button("Back to home"):
+            st.switch_page(st.session_state.pages["home"])
         return
 
     ticket = tickets[selected_ticket]
