@@ -46,8 +46,10 @@ def show_browse_tickets():
 
                     st.subheader(ticket["name"])
 
-                    st.write(ticket["description"])
-
+                    st.markdown(
+                    f'<p class="ticket-desc">{ticket["description"]}</p>',
+                    unsafe_allow_html=True,
+                    )
                     if st.button(
                         "Order Now →",
                         key=f"order_{ticket['id']}",

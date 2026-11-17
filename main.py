@@ -46,7 +46,17 @@ if st.session_state.current_account is None:
 else:
     pg = st.navigation([home, browse_tickets, order_tickets, display_orders], position="hidden")
     with st.sidebar:
-        if st.button("Log out"):
+        st.markdown("### 🎟️ Wunderbar")
+        st.caption("Ticket Hub")
+        st.divider()
+
+        st.page_link(home, label="Home", icon=":material/home:")
+        st.page_link(browse_tickets, label="Browse tickets", icon=":material/search:")
+        st.page_link(display_orders, label="My orders", icon=":material/receipt_long:")
+
+        st.divider()
+
+        if st.button("Log out", icon=":material/logout:", width="stretch"):
             st.session_state.clear()
             st.rerun()
 
